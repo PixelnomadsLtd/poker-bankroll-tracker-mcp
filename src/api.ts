@@ -2,7 +2,7 @@ import type { Session, SessionsResponse, SessionFilters } from "./types.js";
 import { AuthError, NetworkError, PbtApiError, RateLimitError } from "./errors.js";
 
 const BASE_URL = "https://api.pokerbankrolltracker.net/v1";
-const CACHE_TTL_MS = 5 * 60 * 1000;
+const CACHE_TTL_MS = 10 * 1000;
 
 interface CacheEntry {
   sessions: Session[];

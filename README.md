@@ -103,7 +103,7 @@ How am I doing at 1/2 NLH this year?
 
 ## API Notes
 
-- **Rate limit:** The Poker Bankroll Tracker API allows 20 requests per 15 minutes. The server caches responses for 5 minutes to reduce API usage.
+- **Rate limit:** The Poker Bankroll Tracker API allows 20 requests per 15 minutes. The server caches responses for 10 seconds to reduce API usage.
 - **Base URL:** `https://api.pokerbankrolltracker.net/v1`
 - **Auth:** Bearer token via `PBT_API_KEY`
 
