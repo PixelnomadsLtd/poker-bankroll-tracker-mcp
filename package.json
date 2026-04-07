@@ -4,6 +4,14 @@
   "description": "MCP server for the Poker Bankroll Tracker API",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "poker-bankroll-tracker-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
@@ -11,15 +19,22 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "oxlint src/",
-    "format": "prettier --write 'src/**/*.ts'",
-    "format:check": "prettier --check 'src/**/*.ts'"
+    "format": "oxfmt --write src/",
+    "format:check": "oxfmt --check src/",
+    "prepublishOnly": "npm run build && npm run lint && npm test"
   },
   "keywords": [
     "mcp",
+    "model-context-protocol",
     "poker",
     "bankroll",
-    "tracker"
+    "tracker",
+    "poker-bankroll-tracker"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0xAndoroid/poker-bankroll-tracker-mcp.git"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=20"
@@ -30,8 +45,8 @@
   },
   "devDependencies": {
     "@types/node": "^25.5.2",
+    "oxfmt": "^0.44.0",
     "oxlint": "^1.59.0",
-    "prettier": "^3.8.1",
     "typescript": "^6.0.2",
     "vitest": "^4.1.2"
   }

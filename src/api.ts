@@ -1,7 +1,7 @@
-import type { Session, SessionsResponse, SessionFilters } from './types.js';
-import { AuthError, NetworkError, PbtApiError, RateLimitError } from './errors.js';
+import type { Session, SessionsResponse, SessionFilters } from "./types.js";
+import { AuthError, NetworkError, PbtApiError, RateLimitError } from "./errors.js";
 
-const BASE_URL = 'https://api.pokerbankrolltracker.net/v1';
+const BASE_URL = "https://api.pokerbankrolltracker.net/v1";
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
 interface CacheEntry {
@@ -25,12 +25,12 @@ export class PbtApiClient {
     }
 
     const url = new URL(`${BASE_URL}/sessions`);
-    if (filters.start) url.searchParams.set('start', filters.start);
-    if (filters.end) url.searchParams.set('end', filters.end);
-    if (filters.type) url.searchParams.set('type', filters.type);
-    if (filters.currency) url.searchParams.set('currency', filters.currency);
+    if (filters.start) url.searchParams.set("start", filters.start);
+    if (filters.end) url.searchParams.set("end", filters.end);
+    if (filters.type) url.searchParams.set("type", filters.type);
+    if (filters.currency) url.searchParams.set("currency", filters.currency);
     if (filters.staking !== undefined) {
-      url.searchParams.set('staking', String(filters.staking));
+      url.searchParams.set("staking", String(filters.staking));
     }
 
     let response: Response;

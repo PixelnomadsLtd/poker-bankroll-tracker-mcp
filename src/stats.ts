@@ -1,4 +1,4 @@
-import type { Session } from './types.js';
+import type { Session } from "./types.js";
 
 export function computeProfit(session: Session): number {
   return session.cashout - session.buyin - session.rebuy_costs - session.expenses;
@@ -6,11 +6,11 @@ export function computeProfit(session: Session): number {
 
 export function formatStakes(session: Session): string {
   if (
-    session.type !== 'cashgame' ||
+    session.type !== "cashgame" ||
     session.small_blind === undefined ||
     session.big_blind === undefined
   ) {
-    return 'N/A';
+    return "N/A";
   }
   const stakes = `${session.small_blind}/${session.big_blind}`;
   return session.game ? `${session.game} ${stakes}` : stakes;
@@ -63,12 +63,12 @@ export function computeStats(sessions: Session[]): Stats {
     if (profit > 0) winningSessions++;
     currencies.add(session.currency);
 
-    const loc = session.location || 'Unknown';
+    const loc = session.location || "Unknown";
     const locBucket = (byLocation[loc] ??= { sessions: 0, profit: 0 });
     locBucket.sessions++;
     locBucket.profit = round2(locBucket.profit + profit);
 
-    if (session.type === 'cashgame') {
+    if (session.type === "cashgame") {
       const stakes = formatStakes(session);
       const stakesBucket = (byStakes[stakes] ??= { sessions: 0, profit: 0 });
       stakesBucket.sessions++;

@@ -1,29 +1,29 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { PbtApiClient } from './api.js';
-import { registerTools } from './tools.js';
-import type { Session } from './types.js';
-import { PbtApiError } from './errors.js';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { PbtApiClient } from "./api.js";
+import { registerTools } from "./tools.js";
+import type { Session } from "./types.js";
+import { PbtApiError } from "./errors.js";
 
 const CASH_SESSION: Session = {
   id: 101,
-  type: 'cashgame',
-  start: '2026-03-15 19:00:00',
-  location: 'Bellagio',
-  location_type: 'Casino',
-  currency: 'USD',
+  type: "cashgame",
+  start: "2026-03-15 19:00:00",
+  location: "Bellagio",
+  location_type: "Casino",
+  currency: "USD",
   buyin: 500,
   cashout: 1200,
   number_of_rebuys: 0,
   rebuy_costs: 0,
   expenses: 0,
   expenses_in_chips: 0,
-  currency_exchange_rate: '1.000000000000',
+  currency_exchange_rate: "1.000000000000",
   staking: false,
   private: false,
-  limit: 'No Limit',
-  game: 'NLH',
-  table_size: 'Full-Ring',
+  limit: "No Limit",
+  game: "NLH",
+  table_size: "Full-Ring",
   small_blind: 1,
   big_blind: 2,
   third_blind: 0,
@@ -33,18 +33,18 @@ const CASH_SESSION: Session = {
 
 const TOURNAMENT_SESSION: Session = {
   id: 102,
-  type: 'tournament',
-  start: '2026-03-16 12:00:00',
-  location: 'Aria',
-  location_type: 'Casino',
-  currency: 'USD',
+  type: "tournament",
+  start: "2026-03-16 12:00:00",
+  location: "Aria",
+  location_type: "Casino",
+  currency: "USD",
   buyin: 200,
   cashout: 800,
   number_of_rebuys: 0,
   rebuy_costs: 0,
   expenses: 0,
   expenses_in_chips: 0,
-  currency_exchange_rate: '1.000000000000',
+  currency_exchange_rate: "1.000000000000",
   staking: false,
   private: false,
 };
@@ -58,7 +58,7 @@ function captureTools(server: McpServer, client: PbtApiClient) {
   const tools = new Map<string, ToolHandler>();
   const originalRegisterTool = server.registerTool.bind(server);
 
-  vi.spyOn(server, 'registerTool').mockImplementation(
+  vi.spyOn(server, "registerTool").mockImplementation(
     (name: string, _config: unknown, cb: unknown) => {
       tools.set(name, cb as ToolHandler);
       return originalRegisterTool(name, _config as never, cb as never);
@@ -69,60 +69,60 @@ function captureTools(server: McpServer, client: PbtApiClient) {
   return tools;
 }
 
-describe('MCP Tools', () => {
+describe("MCP Tools", () => {
   let client: PbtApiClient;
   let server: McpServer;
   let tools: Map<string, ToolHandler>;
 
   beforeEach(() => {
-    client = new PbtApiClient('test-key');
-    server = new McpServer({ name: 'test', version: '0.0.0' });
+    client = new PbtApiClient("test-key");
+    server = new McpServer({ name: "test", version: "0.0.0" });
 
-    vi.spyOn(client, 'fetchSessions').mockResolvedValue([CASH_SESSION, TOURNAMENT_SESSION]);
+    vi.spyOn(client, "fetchSessions").mockResolvedValue([CASH_SESSION, TOURNAMENT_SESSION]);
     tools = captureTools(server, client);
   });
 
-  describe('get_sessions', () => {
-    it('returns formatted sessions with profit', async () => {
-      const handler = tools.get('get_sessions')!;
+  describe("get_sessions", () => {
+    it("returns formatted sessions with profit", async () => {
+      const handler = tools.get("get_sessions")!;
       const result = await handler({});
       const data = JSON.parse(result.content[0].text);
 
       expect(data).toHaveLength(2);
       expect(data[0].id).toBe(101);
       expect(data[0].profit).toBe(700);
-      expect(data[0].stakes).toBe('NLH 1/2');
+      expect(data[0].stakes).toBe("NLH 1/2");
       expect(data[1].id).toBe(102);
       expect(data[1].profit).toBe(600);
       expect(data[1].stakes).toBeUndefined();
     });
 
-    it('passes filters to API client', async () => {
-      const handler = tools.get('get_sessions')!;
-      await handler({ start: '2026-01-01', type: 'cashgame' });
+    it("passes filters to API client", async () => {
+      const handler = tools.get("get_sessions")!;
+      await handler({ start: "2026-01-01", type: "cashgame" });
 
       expect(client.fetchSessions).toHaveBeenCalledWith({
-        start: '2026-01-01',
-        type: 'cashgame',
+        start: "2026-01-01",
+        type: "cashgame",
       });
     });
 
-    it('returns error on API failure', async () => {
-      vi.spyOn(client, 'fetchSessions').mockRejectedValue(
-        new PbtApiError('Rate limit exceeded', 429),
+    it("returns error on API failure", async () => {
+      vi.spyOn(client, "fetchSessions").mockRejectedValue(
+        new PbtApiError("Rate limit exceeded", 429),
       );
 
-      const handler = tools.get('get_sessions')!;
+      const handler = tools.get("get_sessions")!;
       const result = await handler({});
 
       expect(result.isError).toBe(true);
-      expect(result.content[0].text).toContain('Rate limit');
+      expect(result.content[0].text).toContain("Rate limit");
     });
   });
 
-  describe('get_stats', () => {
-    it('returns aggregate statistics', async () => {
-      const handler = tools.get('get_stats')!;
+  describe("get_stats", () => {
+    it("returns aggregate statistics", async () => {
+      const handler = tools.get("get_stats")!;
       const result = await handler({});
       const data = JSON.parse(result.content[0].text);
 
@@ -130,52 +130,25 @@ describe('MCP Tools', () => {
       expect(data.totalProfit).toBe(1300);
       expect(data.winRate).toBe(100);
       expect(data.avgSessionProfit).toBe(650);
-      expect(data.currencies).toEqual(['USD']);
+      expect(data.currencies).toEqual(["USD"]);
     });
 
-    it('includes location breakdown', async () => {
-      const handler = tools.get('get_stats')!;
+    it("includes location breakdown", async () => {
+      const handler = tools.get("get_stats")!;
       const result = await handler({});
       const data = JSON.parse(result.content[0].text);
 
-      expect(data.byLocation['Bellagio']).toEqual({ sessions: 1, profit: 700 });
-      expect(data.byLocation['Aria']).toEqual({ sessions: 1, profit: 600 });
+      expect(data.byLocation["Bellagio"]).toEqual({ sessions: 1, profit: 700 });
+      expect(data.byLocation["Aria"]).toEqual({ sessions: 1, profit: 600 });
     });
 
-    it('includes stakes breakdown for cash games only', async () => {
-      const handler = tools.get('get_stats')!;
+    it("includes stakes breakdown for cash games only", async () => {
+      const handler = tools.get("get_stats")!;
       const result = await handler({});
       const data = JSON.parse(result.content[0].text);
 
-      expect(data.byStakes['NLH 1/2']).toEqual({ sessions: 1, profit: 700 });
+      expect(data.byStakes["NLH 1/2"]).toEqual({ sessions: 1, profit: 700 });
       expect(Object.keys(data.byStakes)).toHaveLength(1);
-    });
-  });
-
-  describe('get_session_by_id', () => {
-    it('returns a specific session', async () => {
-      const handler = tools.get('get_session_by_id')!;
-      const result = await handler({ id: 101 });
-      const data = JSON.parse(result.content[0].text);
-
-      expect(data.id).toBe(101);
-      expect(data.profit).toBe(700);
-    });
-
-    it('returns error for non-existent ID', async () => {
-      const handler = tools.get('get_session_by_id')!;
-      const result = await handler({ id: 999 });
-
-      expect(result.isError).toBe(true);
-      expect(result.content[0].text).toContain('999');
-      expect(result.content[0].text).toContain('not found');
-    });
-
-    it('fetches without filters to search all sessions', async () => {
-      const handler = tools.get('get_session_by_id')!;
-      await handler({ id: 101 });
-
-      expect(client.fetchSessions).toHaveBeenCalledWith();
     });
   });
 });

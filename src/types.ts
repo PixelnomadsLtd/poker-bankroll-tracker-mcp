@@ -1,10 +1,10 @@
 export const SESSION_TYPES = [
-  'cashgame',
-  'tournament',
-  'payout',
-  'costs',
-  'casinogame',
-  'jackpot',
+  "cashgame",
+  "tournament",
+  "payout",
+  "costs",
+  "casinogame",
+  "jackpot",
 ] as const;
 
 export type SessionType = (typeof SESSION_TYPES)[number];
