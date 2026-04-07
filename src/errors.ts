@@ -17,7 +17,7 @@ export class AuthError extends PbtApiError {
 
 export class RateLimitError extends PbtApiError {
   constructor() {
-    super("Rate limit exceeded (25 requests/day). Try again tomorrow.", 429);
+    super("Rate limit exceeded (20 requests/15min). Try again later.", 429);
     this.name = "RateLimitError";
   }
 }
