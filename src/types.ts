@@ -13,6 +13,7 @@ export interface Session {
   id: number;
   type: SessionType;
   start: string;
+  end: string;
   location: string;
   location_type: string;
   currency: string;

@@ -7,6 +7,7 @@ const MOCK_SESSION: Session = {
   id: 1,
   type: "cashgame",
   start: "2026-03-15 19:00:00",
+  end: "2026-03-16 03:00:00",
   location: "Bellagio",
   location_type: "Casino",
   currency: "USD",

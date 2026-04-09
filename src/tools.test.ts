@@ -9,6 +9,7 @@ const CASH_SESSION: Session = {
   id: 101,
   type: "cashgame",
   start: "2026-03-15 19:00:00",
+  end: "2026-03-16 03:00:00",
   location: "Bellagio",
   location_type: "Casino",
   currency: "USD",
@@ -35,6 +36,7 @@ const TOURNAMENT_SESSION: Session = {
   id: 102,
   type: "tournament",
   start: "2026-03-16 12:00:00",
+  end: "2026-03-16 20:00:00",
   location: "Aria",
   location_type: "Casino",
   currency: "USD",
@@ -90,11 +92,20 @@ describe("MCP Tools", () => {
 
       expect(data).toHaveLength(2);
       expect(data[0].id).toBe(101);
+      expect(data[0].endedAt).toBe("2026-03-16T03:00:00");
+      expect(data[0].expensesInChips).toBe(0);
+      expect(data[0].currencyExchangeRate).toBe("1.000000000000");
+      expect(data[0].private).toBe(false);
       expect(data[0].profit).toBe(700);
       expect(data[0].stakes).toBe("NLH 1/2");
+      expect(data[0].smallBlind).toBe(1);
+      expect(data[0].bigBlind).toBe(2);
+      expect(data[0].thirdBlind).toBe(0);
+      expect(data[0].ante).toBe(0);
       expect(data[1].id).toBe(102);
       expect(data[1].profit).toBe(600);
       expect(data[1].stakes).toBeUndefined();
+      expect(data[1].smallBlind).toBeUndefined();
     });
 
     it("passes filters to API client", async () => {
