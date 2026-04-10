@@ -6,7 +6,7 @@ import { computeProfit, computeStats, formatStakes } from "./stats.js";
 import { PbtApiError } from "./errors.js";
 
 function formatSession(session: Session) {
-  const base = {
+  const result: Record<string, unknown> = {
     id: session.id,
     type: session.type,
     startedAt: session.start.replace(" ", "T"),
@@ -17,42 +17,40 @@ function formatSession(session: Session) {
     private: session.private,
   };
 
-  if (session.amount !== undefined) {
-    return { ...base, amount: session.amount };
+  if (session.end != null) result.endedAt = session.end.replace(" ", "T");
+  if (session.amount != null) result.amount = session.amount;
+  if (session.buyin != null) result.buyin = session.buyin;
+  if (session.cashout != null) result.cashout = session.cashout;
+  if (session.number_of_rebuys != null) result.rebuys = session.number_of_rebuys;
+  if (session.rebuy_costs != null) result.rebuyCosts = session.rebuy_costs;
+  if (session.expenses != null) result.expenses = session.expenses;
+  if (session.expenses_in_chips != null) result.expensesInChips = session.expenses_in_chips;
+  if (session.currency_exchange_rate != null) result.currencyExchangeRate = session.currency_exchange_rate;
+  if (session.staking != null) result.staking = session.staking;
+  if (session.game != null) result.game = session.game;
+  if (session.limit != null) result.limit = session.limit;
+  if (session.table_size != null) result.tableSize = session.table_size;
+  if (session.hands_per_hour != null) result.handsPerHour = session.hands_per_hour;
+
+  if (session.type === "cashgame") {
+    result.stakes = formatStakes(session);
+    if (session.small_blind != null) result.smallBlind = session.small_blind;
+    if (session.big_blind != null) result.bigBlind = session.big_blind;
+    if (session.third_blind != null) result.thirdBlind = session.third_blind;
+    if (session.ante != null) result.ante = session.ante;
   }
 
-  return {
-    ...base,
-    endedAt: session.end?.replace(" ", "T"),
-    buyin: session.buyin,
-    cashout: session.cashout,
-    rebuys: session.number_of_rebuys,
-    rebuyCosts: session.rebuy_costs,
-    expenses: session.expenses,
-    expensesInChips: session.expenses_in_chips,
-    currencyExchangeRate: session.currency_exchange_rate,
-    staking: session.staking,
-    game: session.game,
-    limit: session.limit,
-    tableSize: session.table_size,
-    handsPerHour: session.hands_per_hour,
-    ...(session.type === "cashgame" && {
-      stakes: formatStakes(session),
-      smallBlind: session.small_blind,
-      bigBlind: session.big_blind,
-      thirdBlind: session.third_blind,
-      ante: session.ante,
-    }),
-    ...(session.type === "tournament" && {
-      addonCosts: session.addon_costs,
-      bountyWinnings: session.bounty_winnings,
-      place: session.place,
-      itm: session.itm,
-      players: session.players,
-      sharesIncome: session.shares_income,
-      sharesOutgoing: session.shares_outgoing,
-    }),
-  };
+  if (session.type === "tournament") {
+    if (session.addon_costs != null) result.addonCosts = session.addon_costs;
+    if (session.bounty_winnings != null) result.bountyWinnings = session.bounty_winnings;
+    if (session.place != null) result.place = session.place;
+    if (session.itm != null) result.itm = session.itm;
+    if (session.players != null) result.players = session.players;
+    if (session.shares_income != null) result.sharesIncome = session.shares_income;
+    if (session.shares_outgoing != null) result.sharesOutgoing = session.shares_outgoing;
+  }
+
+  return result;
 }
 
 function toolError(message: string) {

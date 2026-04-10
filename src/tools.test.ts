@@ -170,8 +170,13 @@ describe("MCP Tools", () => {
       expect(data[1].players).toBe(120);
       expect(data[1].sharesIncome).toBe(200);
       expect(data[1].sharesOutgoing).toBe(0);
-      expect(data[1].stakes).toBeUndefined();
-      expect(data[1].smallBlind).toBeUndefined();
+      expect(data[0]).not.toHaveProperty("addonCosts");
+      expect(data[0]).not.toHaveProperty("bountyWinnings");
+      expect(data[0]).not.toHaveProperty("place");
+      expect(data[1]).not.toHaveProperty("stakes");
+      expect(data[1]).not.toHaveProperty("smallBlind");
+      expect(data[1]).not.toHaveProperty("bigBlind");
+      expect(data[1]).not.toHaveProperty("ante");
     });
 
     it("formats simple session types with amount", async () => {
@@ -188,27 +193,62 @@ describe("MCP Tools", () => {
 
       expect(data).toHaveLength(4);
 
+      const fullSessionKeys = [
+        "endedAt",
+        "buyin",
+        "cashout",
+        "rebuys",
+        "rebuyCosts",
+        "expenses",
+        "expensesInChips",
+        "currencyExchangeRate",
+        "staking",
+        "game",
+        "limit",
+        "tableSize",
+        "handsPerHour",
+        "stakes",
+        "smallBlind",
+        "bigBlind",
+        "thirdBlind",
+        "ante",
+        "addonCosts",
+        "bountyWinnings",
+        "place",
+        "itm",
+        "players",
+        "sharesIncome",
+        "sharesOutgoing",
+      ];
+
       expect(data[0].type).toBe("payout");
       expect(data[0].amount).toBe(1);
       expect(data[0].profit).toBe(1);
       expect(data[0].private).toBe(true);
-      expect(data[0].endedAt).toBeUndefined();
-      expect(data[0].buyin).toBeUndefined();
-      expect(data[0].staking).toBeUndefined();
-      expect(data[0].addonCosts).toBeUndefined();
-      expect(data[0].place).toBeUndefined();
+      for (const key of fullSessionKeys) {
+        expect(data[0]).not.toHaveProperty(key);
+      }
 
       expect(data[1].type).toBe("costs");
       expect(data[1].amount).toBe(-2);
       expect(data[1].profit).toBe(-2);
+      for (const key of fullSessionKeys) {
+        expect(data[1]).not.toHaveProperty(key);
+      }
 
       expect(data[2].type).toBe("casinogame");
       expect(data[2].amount).toBe(-1);
       expect(data[2].profit).toBe(-1);
+      for (const key of fullSessionKeys) {
+        expect(data[2]).not.toHaveProperty(key);
+      }
 
       expect(data[3].type).toBe("jackpot");
       expect(data[3].amount).toBe(1);
       expect(data[3].profit).toBe(1);
+      for (const key of fullSessionKeys) {
+        expect(data[3]).not.toHaveProperty(key);
+      }
     });
 
     it("passes filters to API client", async () => {
